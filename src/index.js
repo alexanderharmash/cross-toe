@@ -10,7 +10,6 @@ const wonMessage = document.querySelector('span.won-message');
 const Status = Object.freeze({
   RENDERED: 'rendered',
   CANCELED: 'canceled',
-  VICTORIOUS: 'victories',
 });
 
 class Move {
@@ -108,9 +107,8 @@ function linearHorizontal() {
     for (let j = 0; j < ROWS_COUNT - 1; j += 1) {
       result &= slots[i * 3 + j].classList.value === slots[i * 3 + j + 1].classList.value;
     }
-    if (result) return true;
+    if (result) console.log(slots.slice(i*3, i*3+3));
   }
-  return false;
 }
 
 function linearVertical() {
