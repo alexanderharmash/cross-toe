@@ -34,10 +34,6 @@ function move() {
   return currentClass === 'ch' ? 'r' : 'ch';
 }
 
-/*
- * DRAW slots
- */
-
 function clearField(slots) {
   Array.prototype.slice.call(slots).forEach(cell => {
     cell.classList = 'cell';
@@ -98,4 +94,3 @@ redoBotton.addEventListener('click', () => {
   save('moves', moves);
   redrawTheField(slots);
 });
-
