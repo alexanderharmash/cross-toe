@@ -74,6 +74,7 @@ slots.forEach(cell =>
         .filter(mov => mov.STATUS === Status.RENDERED)
         .concat(new Move(cel.target.id, move(), Status.RENDERED))
     );
+
     redrawTheField(slots);
   })
 );
@@ -98,26 +99,3 @@ redoBotton.addEventListener('click', () => {
   redrawTheField(slots);
 });
 
-const ROWS_COUNT = 3;
-const COLS_COUNT = 3;
-
-function linearHorizontal() {
-  let result = true;
-  for (let i = 0; i < COLS_COUNT; i += 1) {
-    for (let j = 0; j < ROWS_COUNT - 1; j += 1) {
-      result &= slots[i * 3 + j].classList.value === slots[i * 3 + j + 1].classList.value;
-    }
-    if (result) console.log(slots.slice(i*3, i*3+3));
-  }
-}
-
-function linearVertical() {
-  let result = true;
-  for (let i = 0; i < COLS_COUNT - 1; i += 1) {
-    for (let j = 0; j < ROWS_COUNT; j += 1) {
-      result &= slots[j * 3 + i].classList.value === slots[j * 3 + i + 1].classList.value;
-    }
-    if (result) return true;
-  }
-  return false;
-}
