@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "start": "webpack-dev-server --open",
-    "pretty": "prettier --check \"src/**/*.js\"",
+    "pretty": "prettier --write \"src/**/*.js\"",
     "lint": "eslint --fix ./src/index.js",
     "babel": "babel ./src/index.js"
   },
