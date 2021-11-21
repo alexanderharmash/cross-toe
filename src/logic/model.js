@@ -1,69 +1,61 @@
-const Data = {
-  save(key, data) {
-    const json = JSON.stringify(data);
-    localStorage.setItem(key, json);
-  },
-
-  load(key) {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : [
-      [
-        {'cl' : 'cell','id' : 'c-0'},{'cl' : 'cell','id' : 'c-1'},{'cl' : 'cell','id' : 'c-2'},
-        {'cl' : 'cell','id' : 'c-3'},{'cl' : 'cell','id' : 'c-4'},{'cl' : 'cell','id' : 'c-5'},
-        {'cl' : 'cell','id' : 'c-6'},{'cl' : 'cell','id' : 'c-7'},{'cl' : 'cell','id' : 'c-8'},
-      ]
-    ];
-  },
-}
+import {Moves} from './model-move'
+import {Data} from './model-data'
+import {WinChacker} from './model-win'
 
 export function Model(View) {
+  const COUNT = 3;
 
-  /**
-   * logic
-   */
-
-  function sign(index) {
-    return index % 2 ? 'ch' : 'r';
-  }
-
-  /**
-   * handlers
-   */
-
-  function changes(cells, ...changes) {
-    changes.forEach(change => {
-      cells.forEach(cell => {
-        if (cell.id === change.id){
-          cell.cl = change.cl;
-        };
-      });
-    });
-  }
+  const move = new Moves(COUNT, View, WinChacker, Data);
 
   return {
     
     move(target) {
-      if (target.classList.contains('cell')) {
-
-        const cells = Data.load('moves');
-
-        const obj = {
-          'cl' : `cell ${sign(cells.length)}`,
-          'id' : `${target.id}`
-        };
-
-        changes(cells, obj);
-
-        View.render(cells);
-
-        Data.save('moves', cells);
+      if(target.classList.contains('cell')){
+        if (!localStorage.getItem('won')) {
+          View.undoDisabled(false);
+          if (Data.load('undo').length) {
+            Data.save('undo', []);
+            View.redoDisabled(true);
+          }
+          move.setMove(target);
+          
+        }
       }
     },
 
-    redoButton() {},
+    redoButton() {
+      View.undoDisabled(false);
 
-    undoButton() {},
+      let lastMove = Data.pop('undo');
+      Data.next('moves' , [lastMove]);
+      View.render(Data.last('moves'));
 
-    restButton() {},
+      if (!(Data.load('undo').length)){
+        View.redoDisabled(true);
+      }
+    },
+
+    undoButton() {
+      View.redoDisabled(false);
+
+      if (Data.load('moves').length - 1){
+        let lastMove = Data.pop('moves');
+        Data.next('undo' , [lastMove]);
+        View.render(Data.last('moves'));
+      }else{
+        let lastMove = Data.pop('moves');
+        Data.next('undo' , [lastMove]);
+        View.undoDisabled(true);
+        View.render(Data.clearField(COUNT*COUNT));
+      }
+    },
+
+    restButton() {
+      localStorage.removeItem('won')
+      View.undoDisabled(true);
+      View.tittle();
+      Data.save('moves', []);
+      View.render(Data.clearField(COUNT*COUNT));
+    },
   };
 }

@@ -12,14 +12,22 @@ export function View(elements) {
       });
     },
 
-    buttons(disable) {
-      elements.undoButton.disable = disable;
-      elements.redoButton.disable = disable;
+    buttons(disabled) {
+      elements.undoButton.disabled = disabled;
+      elements.redoButton.disabled = disabled;
+    },
+
+    undoDisabled(disabled){
+      elements.undoButton.disabled = disabled;
+    },
+
+    redoDisabled(disabled){
+      elements.redoButton.disabled = disabled;
     },
 
     tittle(text) {
       elements.wonTitle.classList.toggle('hidden');
-      elements.wonMessage.textContext = text;
+      elements.wonMessage.innerHTML = text;
     },
   };
 }
